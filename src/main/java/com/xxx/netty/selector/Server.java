@@ -1,18 +1,13 @@
 package com.xxx.netty.selector;
 
-import com.google.common.base.Utf8;
 import lombok.extern.slf4j.Slf4j;
-import sun.awt.AWTCharset;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
-import java.util.Set;
 
 import static com.xxx.netty.util.ByteBufferUtil.debugRead;
 
@@ -36,20 +31,22 @@ public class Server {
         ssc.configureBlocking(false);
 
         //把channel注册到selector/
-        SelectionKey sscKey = ssc.register(selector, 0, null);
+        SelectionKey sscKey = ssc.register(selector, SelectionKey.OP_ACCEPT, null);
         //key只关注accept事件
-        sscKey.interestOps(SelectionKey.OP_ACCEPT);
+//        sscKey.interestOps();
         //2.绑定监听端口
         ssc.bind(new InetSocketAddress(8080));
         while (true) {
             //3. select 方法,没有事件发生，线程阻塞，有事件，线程执行
-            selector.select(); //如果事件未处理（也未取消时key.cancel()）时，重新加入集合
-            //4.处理事件,返回事件集合selectionKeys
-            Set<SelectionKey> selectionKeys = selector.selectedKeys();
-            Iterator<SelectionKey> iterator = selectionKeys.iterator();
+            selector.select();//如果事件未处理（也未取消时key.cancel()）时，重新加入集合
+//4.处理事件,返回事件集合selectionKeys
+            Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
+//            Iterator<SelectionKey> iter = selectionKeys.iterator();
 
-            while (iterator.hasNext()) {
-                SelectionKey key = iterator.next();
+            while (iter.hasNext()) {
+                SelectionKey key = iter.next();
+//                将iterator当前的key移除，确保选中事件执行完移除
+                iter.remove();
                 log.debug("key: {}", key);
                 //5.区分事件类型
                 if (key.isAcceptable()) {
@@ -57,8 +54,8 @@ public class Server {
                     SocketChannel sc = channel.accept();
                     sc.configureBlocking(false);
                     //sc注册到selector中，并设置事件类型
-                    SelectionKey scKey = sc.register(selector, 0, null);
-                    scKey.interestOps(SelectionKey.OP_READ);
+                    SelectionKey scKey = sc.register(selector, SelectionKey.OP_READ, null);
+//                    scKey.interestOps();
                     log.debug("来源-Client:{}", sc);
                 } else if (key.isReadable()) {
                     try {
@@ -66,22 +63,23 @@ public class Server {
                         int read = channel.read(buffer);//如果是正常断开，read返回-1
                         if (read == -1) {
                             //正常断开，进行反注册
-                            log.debug("远程主机已正常关闭连接:{}",key);
+                            log.debug("远程主机已正常关闭连接:{}", key);
                             key.cancel();
+                            channel.close();
                         } else {
                             buffer.flip();
 //                            debugRead(buffer);
                             String str = Charset.defaultCharset().decode(buffer).toString();
+                            //清空缓冲区
+                            buffer.clear();
                             System.out.println("Client: " + str);
                         }
                     } catch (IOException e) {
-                        log.debug("远程主机已主动关闭连接:{}",key);
+                        log.debug("远程主机已主动关闭连接:{}", key);
                         //client主动断开时（异常关闭），将key进行cancel，反注册
                         key.cancel();
                     }
                 }
-//                将iterator当前的key移除，确保选中事件执行完移除
-                iterator.remove();
             }
         }
     }
