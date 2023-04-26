@@ -1,13 +1,7 @@
 package com.xxx.test;
 
-import com.google.common.base.Utf8;
-
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import static com.xxx.test.ByteBufferUtil.debugAll;
 
 /**
  * 2023/4/24

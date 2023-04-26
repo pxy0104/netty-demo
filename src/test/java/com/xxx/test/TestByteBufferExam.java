@@ -3,7 +3,7 @@ package com.xxx.test;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-import static com.xxx.test.ByteBufferUtil.debugAll;
+import static com.xxx.netty.util.ByteBufferUtil.debugAll;
 
 /**
  * 2023/4/24
