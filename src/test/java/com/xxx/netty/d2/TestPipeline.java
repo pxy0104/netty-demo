@@ -40,7 +40,8 @@ public class TestPipeline {
                                 log.debug("3");
                                 super.channelRead(ctx, msg);
                                 ch.writeAndFlush(ctx.alloc().buffer().writeBytes("str".getBytes()));
-
+                                //寻找上一个出栈处理器，进行处理
+//                                ctx.writeAndFlush(ctx.alloc().buffer().writeBytes("str".getBytes()));
                             }
                         });
                         pipeline.addLast("h4",new ChannelOutboundHandlerAdapter() {
