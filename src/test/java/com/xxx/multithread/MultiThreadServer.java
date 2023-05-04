@@ -1,6 +1,5 @@
 package com.xxx.multithread;
 
-import com.sun.org.apache.bcel.internal.generic.Select;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -11,8 +10,6 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.xxx.netty.util.ByteBufferUtil.debugAll;
 
 /**
  * 2023/4/28

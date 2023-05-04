@@ -1,4 +1,4 @@
-package com.xxx.netty.d1;
+package com.xxx.d1;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,7 +10,7 @@ import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.xxx.netty.util.ByteBufferUtil.debugRead;
+import static com.xxx.util.ByteBufferUtil.debugRead;
 
 
 /**

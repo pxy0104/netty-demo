@@ -1,4 +1,4 @@
-package com.xxx.netty.selector;
+package com.xxx.selector;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

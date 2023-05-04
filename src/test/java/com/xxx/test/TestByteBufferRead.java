@@ -2,7 +2,7 @@ package com.xxx.test;
 
 import java.nio.ByteBuffer;
 
-import static com.xxx.netty.util.ByteBufferUtil.debugAll;
+import static com.xxx.util.ByteBufferUtil.debugAll;
 
 /**
  * 2023/4/24

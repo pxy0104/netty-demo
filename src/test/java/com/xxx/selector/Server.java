@@ -1,4 +1,4 @@
-package com.xxx.netty.selector;
+package com.xxx.selector;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,8 +8,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.charset.Charset;
 import java.util.Iterator;
-
-import static com.xxx.netty.util.ByteBufferUtil.debugRead;
 
 
 /**
