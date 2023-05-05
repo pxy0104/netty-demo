@@ -26,7 +26,6 @@ public class HelloClient {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
                         ch.pipeline().addLast(new StringEncoder());
-
                     }
                     //连接到服务器
                 }).connect(new InetSocketAddress(8080))
