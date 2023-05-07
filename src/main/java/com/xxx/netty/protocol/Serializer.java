@@ -53,7 +53,7 @@ public interface Serializer {
 
             @Override
             public <T> byte[] serialize(T object) {
-                Gson gson = new GsonBuilder().registerTypeAdapter(Class.class, new ClassCodec()).create();
+                Gson gson = new GsonBuilder().registerTypeAdapter(Class.class,new ClassCodec()).create();
                 String json = gson.toJson(object);
                 return json.getBytes(StandardCharsets.UTF_8);
             }

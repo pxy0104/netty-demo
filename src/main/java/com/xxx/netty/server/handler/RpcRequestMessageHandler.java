@@ -19,6 +19,7 @@ public class RpcRequestMessageHandler extends SimpleChannelInboundHandler<RpcReq
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequestMessage message) throws Exception {
         RpcResponseMessage response = new RpcResponseMessage();
+        response.setSequenceId(message.getSequenceId());
         try {
             //根据接口全名找到类的实现
             HelloService service = (HelloService) ServicesFactory.getService(Class.forName(message.getInterfaceName()));
@@ -28,6 +29,8 @@ public class RpcRequestMessageHandler extends SimpleChannelInboundHandler<RpcReq
             response.setReturnValue(invoke);
         } catch (Exception e) {
             e.printStackTrace();
+            Throwable cause = e.getCause();
+            response.setExceptionValue(new Exception("远程调用失败:"+cause.getMessage()));
         }
         ctx.writeAndFlush(response);
     }

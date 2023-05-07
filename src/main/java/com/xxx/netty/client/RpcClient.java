@@ -1,6 +1,7 @@
 package com.xxx.netty.client;
 
 //import com.xxx.netty.client.handler.RpcResponseMessageHandler;
+import com.xxx.netty.client.handler.RpcResponseMessageHandler;
 import com.xxx.netty.message.RpcRequestMessage;
 import com.xxx.netty.protocol.MessageCodecSharable;
 import com.xxx.netty.protocol.ProtocolFrameDecoder;
@@ -19,7 +20,7 @@ public class RpcClient {
         NioEventLoopGroup group = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
         MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable();
-//        RpcResponseMessageHandler RPC_HANDLER = new RpcResponseMessageHandler();
+        RpcResponseMessageHandler RPC_HANDLER = new RpcResponseMessageHandler();
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.channel(NioSocketChannel.class);
@@ -30,7 +31,7 @@ public class RpcClient {
                     ch.pipeline().addLast(new ProtocolFrameDecoder());
                     ch.pipeline().addLast(LOGGING_HANDLER);
                     ch.pipeline().addLast(MESSAGE_CODEC);
-//                    ch.pipeline().addLast(RPC_HANDLER);
+                    ch.pipeline().addLast(RPC_HANDLER);
                 }
             });
             Channel channel = bootstrap.connect("localhost", 8080).sync().channel();
@@ -42,13 +43,12 @@ public class RpcClient {
                     String.class,
                     new Class[]{String.class},
                     new Object[]{"张三"}
-            )).addListener(promise -> {
+            )).addListener(promise->{
                 if (!promise.isSuccess()) {
                     Throwable cause = promise.cause();
-                    log.error("error", cause);
+                    log.error("error",cause);
                 }
             });
-
             channel.closeFuture().sync();
         } catch (Exception e) {
             log.error("client error", e);
